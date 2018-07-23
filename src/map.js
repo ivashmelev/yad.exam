@@ -1,27 +1,27 @@
-import { loadList, loadDetails } from './api';
-import { getDetailsContentLayout } from './details';
-import { createFilterControl } from './filter';
+import { loadList, loadDetails } from './api';//Импорт функции loadList и loadDetails из api.js
+import { getDetailsContentLayout } from './details';//Импорт функции getDetailsContentLayout из details.js
+import { createFilterControl } from './filter';//Импорт функции createFilterControl из filter.js
 
-export function initMap(ymaps, containerId) {
-  const myMap = new ymaps.Map(containerId, {
-    center: [55.76, 37.64],
-    controls: [],
-    zoom: 10
+export default function initMap(ymaps, containerId) {//Обьявление функции initMap c параметрами ymaps и containerId | default написано мной для исправления исключения Object is not a function
+  const myMap = new ymaps.Map(containerId, {//Объявление константы как объекта класса Map для создания карты
+    center: [55.76, 37.64],//Координаты центра карты
+    controls: [],//Создание карты без элементов управления
+    zoom: 10//Коэффициент масштабирования
   });
 
-  const objectManager = new ymaps.ObjectManager({
-    clusterize: true,
-    gridSize: 64,
-    clusterIconLayout: 'default#pieChart',
-    clusterDisableClickZoom: false,
-    geoObjectOpenBalloonOnClick: false,
-    geoObjectHideIconOnBalloonOpen: false,
-    geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)
+  const objectManager = new ymaps.ObjectManager({//Инструмент для добавления большого числа объектов на карту
+    clusterize: true,//Флаг, показывающий, нужно ли кластеризовать объекты. *https://habr.com/post/101338/
+    gridSize: 64,//Размер ячейки кластеризатора, заданный пользователем.
+    clusterIconLayout: 'default#pieChart',//Макет метки кластера
+    clusterDisableClickZoom: false,//Флаг, запрещающий увеличение коэффициента масштабирования карты при клике на кластер
+    geoObjectOpenBalloonOnClick: false,//Определяет показывать ли балун при щелчке на геообъекте.
+    geoObjectHideIconOnBalloonOpen: false,//Скрывать иконку при открытии балуна.
+    geoObjectBalloonContentLayout: getDetailsContentLayout(ymaps)//Макет для содержимого балуна|| Значение функция из detail.js 
   });
 
-  objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');
+  objectManager.clusters.options.set('preset', 'islands#greenClusterIcons');//Устанавливает коллекции кластеров предустановленные опции islands#greenClusterIcons
 
-  loadList().then(data => {
+  loadList().then(data => {//
     objectManager.add(data);
   });
 
